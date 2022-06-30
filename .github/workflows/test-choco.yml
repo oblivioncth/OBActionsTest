@@ -19,6 +19,18 @@ jobs:
       run: |
         choco install doxygen.install --version 1.9.4
         choco install graphviz
+    - name: Upload Choco
+      uses: actions/upload-artifact@v3
+      with:
+        name: Choco Dir
+        path: ${{ env.choco_dir }}
+        if-no-files-found: error
+    - name: Upload Theoretical Doxygen
+      uses: actions/upload-artifact@v3
+      with:
+        name: Doxygen
+        path: ${{ env.doxygen_exe }}
+        if-no-files-found: error
     - name: Checkout Test
       uses: actions/checkout@v3
       with:
@@ -36,15 +48,3 @@ jobs:
         echo "Building Test release..."
         cmake --build . --target all --config Release
         echo "Build complete."
-    - name: Upload Choco
-      uses: actions/upload-artifact@v3
-      with:
-        name: Choco Dir
-        path: ${{ env.choco_dir }}
-        if-no-files-found: error
-    - name: Upload Theoretical Doxygen
-      uses: actions/upload-artifact@v3
-      with:
-        name: Doxygen
-        path: ${{ env.doxygen_exe }}
-        if-no-files-found: error
