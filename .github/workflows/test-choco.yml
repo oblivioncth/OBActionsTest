@@ -1,7 +1,7 @@
 name: Chcolatey Doxygen Test
 on: push
 env:
-  test_src_suffix: CLIFp/Source
+  test_src_suffix: Test/Source
   test_src_dir: ${{ github.workspace }}/Test/Source
   test_build_dir: ${{ github.workspace }}/Test/Build
   choco_dir: C:/ProgramData/chocolatey
