@@ -1,0 +1,49 @@
+name: Chcolatey Doxygen Test
+env:
+  test_src_suffix: CLIFp/Source
+  test_src_dir: ${{ github.workspace }}/Test/Source
+  test_build_dir: ${{ github.workspace }}/Test/Build
+  choco_dir: C:/ProgramData/chocolatey
+  doxygen_exe:  C:/Program Files/doxygen/bin/doxygen.exe
+
+jobs:
+  build-clifp:
+    name: Build Test - Windows
+    runs-on: windows-latest
+    env:
+      vs_dir: C:/Program Files/Microsoft Visual Studio/2022/Enterprise
+      cmake_gen: Ninja Multi-Config
+    steps:
+    - name: Install Doxygen & Graphviz
+      run: |
+        choco install doxygen.install --version 1.9.4
+        choco install graphviz
+    - name: Checkout Test
+      uses: actions/checkout@v3
+      with:
+        path: ${{ env.test_src_suffix }}
+    - name: Build/Install Test
+      working-directory: ${{ env.test_src_dir }}
+      shell: cmd
+      run: |
+        echo "Setup C++ Build Environment..."
+        CALL "${{ env.vs_dir }}\Common7\Tools\VsDevCmd.bat" -arch=amd64
+        echo "Configure CMake ..."
+        CALL cmake -G "${{ env.cmake_gen }}" -S "${{ env.test_src_dir}}" -B "${{ env.test_build_dir }}"  
+        echo "Changing to build directory..."
+        cd "%clifp_build_dir%"
+        echo "Building Test release..."
+        cmake --build . --target all --config Release
+        echo "Build complete."
+    - name: Upload Choco
+      uses: actions/upload-artifact@v3
+      with:
+        name: Choco Dir
+        path: ${{ env.choco_dir }}
+        if-no-files-found: error
+    - name: Upload Theoretical Doxygen
+      uses: actions/upload-artifact@v3
+      with:
+        name: Doxygen
+        path: ${{ env.doxygen_exe }}
+        if-no-files-found: error
