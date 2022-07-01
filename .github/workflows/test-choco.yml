@@ -16,18 +16,21 @@ jobs:
       vs_dir: C:/Program Files/Microsoft Visual Studio/2022/Enterprise
       cmake_gen: Ninja Multi-Config
     steps:
+    - name: List choco bin contents
+      run: |
+        Get-ChildItem -Path "${{ env.choco_dir }}/bin"
     - name: Install Doxygen
       run: |
         choco install doxygen.install --version 1.9.4
-    - name: Compress Choco
-      run: |
-        7z a "${{ env.choco_7z }}" "${{ env.choco_dir }}/*"
-    - name: Upload Choco
-      uses: actions/upload-artifact@v3
-      with:
-        name: Choco Install
-        path: ${{ env.choco_7z }}
-        if-no-files-found: error
+    #- name: Compress Choco
+    #  run: |
+    #    7z a "${{ env.choco_7z }}" "${{ env.choco_dir }}/*"
+    #- name: Upload Choco
+    #  uses: actions/upload-artifact@v3
+    #  with:
+    #    name: Choco Install
+    #    path: ${{ env.choco_7z }}
+    #    if-no-files-found: error
     - name: Checkout Test
       uses: actions/checkout@v3
       with:
